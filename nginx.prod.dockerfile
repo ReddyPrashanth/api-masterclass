@@ -13,9 +13,9 @@ RUN addgroup -g ${GID} --system laravel
 RUN adduser -G laravel --system -D -s /bin/sh -u ${UID} laravel
 RUN sed -i "s/user  nginx/user laravel/g" /etc/nginx/nginx.conf
 
-ADD ./nginx/default.prod.conf /etc/nginx/conf.d/default.conf
+ADD ./conf/nginx/default.prod.conf /etc/nginx/conf.d/default.conf
 
 RUN mkdir -p /var/www/html
 
-ADD ./nginx/laravel-docker.test.pem /etc/nginx/certs/laravel-docker.test.pem
-ADD ./nginx/laravel-docker.test-key.pem /etc/nginx/certs/laravel-docker.test-key.pem
+ADD ./conf/nginx/laravel-docker.test.pem /etc/nginx/certs/laravel-docker.test.pem
+ADD ./conf/nginx/laravel-docker.test-key.pem /etc/nginx/certs/laravel-docker.test-key.pem
