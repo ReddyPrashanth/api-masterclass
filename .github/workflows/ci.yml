@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         uses: "php-actions/composer@v6"
         with:
-          args: "--prefer-dist --optimize-autoloader"
+          args: "--prefer-dist --no-dev --optimize-autoloader"
           working_dir: "src"
 
       - name: Create .env file
@@ -46,7 +46,7 @@ jobs:
           echo "DB_DATABASE=${DB_DATABASE}" >> .env
           echo "DB_USER=${DB_USER}" >> .env
           echo "DB_PASS=${DB_PASS}" >> .env
-          cat .env
+          echo "APP_ENV=${APP_ENV}" >> src/.env
 
       - name: Build dev docker containers
         run: docker-compose -f docker-compose.yml build
