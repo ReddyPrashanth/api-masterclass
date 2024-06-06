@@ -71,7 +71,7 @@ services:
     networks:
       - laravel
     depends_on:
-      mariadb:
+      mysql:
         condition: service_healthy
     environment:
       <<: [*appEnvironment]
