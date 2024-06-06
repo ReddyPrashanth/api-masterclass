@@ -47,6 +47,11 @@ services:
     tty: true
     ports:
       - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     environment:
       <<: [*databaseEnvironment]
     networks:
@@ -65,6 +70,9 @@ services:
       - ./src:/var/www/html:delegated
     networks:
       - laravel
+    depends_on:
+      mariadb:
+        condition: service_healthy
     environment:
       <<: [*appEnvironment]
 
