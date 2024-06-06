@@ -1,0 +1,60 @@
+name: Tickets Please CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  APP_NAME: "Tickets Please API"
+  APP_KEY: base64:vmJvslu8KTLeYnFjXgRgLp4IIziOgV5oSEqjMwcIqOs=
+  APP_DEBUG: true
+  APP_ENV: local
+  DB_CONNECTION: mysql
+  DB_HOST: mysql
+  DB_PORT: 3306
+  DB_DATABASE: homestead
+  DB_USER: homestead
+  DB_PASS: secret
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Create .env file
+        run: |
+          echo "APP_NAME=${APP_NAME}" >> .env
+          echo "APP_KEY=${APP_KEY}" >> .env
+          echo "APP_DEBUG=${APP_DEBUG}" >> .env
+          echo "APP_ENV=${APP_ENV}" >> .env
+          echo "DB_HOST=${DB_HOST}" >> .env
+          echo "DB_PORT=${DB_PORT}" >> .env
+          echo "DB_DATABASE=${DB_DATABASE}" >> .env
+          echo "DB_USER=${DB_USER}" >> .env
+          echo "DB_PASS=${DB_PASS}" >> .env
+          cat .env
+
+      - name: Build dev docker containers
+        run: docker-compose -f docker-compose.yml up --build
+
+      - name: Install laravel dependencies
+        run: docker-compose run --rm composer install --prefer-dist --no-dev --optimize-autoloader
+
+      - name: Optimize dependencies
+        run: docker-compose run --rm composer dump-autoload --optimize
+
+      - name: Migrate database tables
+        run: docker-compose run --rm artisan migrate
+
+      - name: Seed test data
+        run: docker-compose run --rm artisan db:seed
+
+      - name: Run application tests
+        run: docker-compose run --rm artisan test
