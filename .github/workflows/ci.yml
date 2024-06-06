@@ -56,8 +56,8 @@ jobs:
       # - name: Install laravel dependencies
       #   run: docker-compose run --rm composer install --prefer-dist --no-dev --optimize-autoloader
 
-      - name: Optimize dependencies
-        run: docker-compose run --rm composer dump-autoload --optimize
+      # - name: Optimize dependencies
+      #   run: docker-compose run --rm composer dump-autoload --optimize
 
       - name: Migrate database tables
         run: docker-compose run --rm artisan migrate
