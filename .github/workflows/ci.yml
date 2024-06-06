@@ -40,23 +40,21 @@ jobs:
           echo "DB_USER=${DB_USER}" >> .env
           echo "DB_PASS=${DB_PASS}" >> .env
           cat .env
-          pwd
-          ls -la
 
-    #   - name: Build dev docker containers
-    #     run: docker-compose -f docker-compose.yml up -d --build
+      - name: Build dev docker containers
+        run: docker-compose -f docker-compose.yml up -d --build
 
-    #   - name: Install laravel dependencies
-    #     run: docker-compose run --rm composer install --prefer-dist --no-dev --optimize-autoloader
+      - name: Install laravel dependencies
+        run: docker-compose run --rm composer install --prefer-dist --no-dev --optimize-autoloader
 
-    #   - name: Optimize dependencies
-    #     run: docker-compose run --rm composer dump-autoload --optimize
+      - name: Optimize dependencies
+        run: docker-compose run --rm composer dump-autoload --optimize
 
-    #   - name: Migrate database tables
-    #     run: docker-compose run --rm artisan migrate
+      - name: Migrate database tables
+        run: docker-compose run --rm artisan migrate
 
-    #   - name: Seed test data
-    #     run: docker-compose run --rm artisan db:seed
+      - name: Seed test data
+        run: docker-compose run --rm artisan db:seed
 
-    #   - name: Run application tests
-    #     run: docker-compose run --rm artisan test
+      - name: Run application tests
+        run: docker-compose run --rm artisan test
