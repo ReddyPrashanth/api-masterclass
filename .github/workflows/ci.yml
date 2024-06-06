@@ -42,7 +42,7 @@ jobs:
           cat .env
 
       - name: Build dev docker containers
-        run: docker-compose -f docker-compose.yml up --build
+        run: docker-compose -f docker-compose.yml up -d --build
 
       - name: Install laravel dependencies
         run: docker-compose run --rm composer install --prefer-dist --no-dev --optimize-autoloader
