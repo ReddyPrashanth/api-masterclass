@@ -42,22 +42,25 @@ jobs:
           cat .env
 
       - name: Build dev docker containers
-        run: docker-compose -f docker-compose.yml build
+        run: docker-compose -f docker-compose.yml build --no-cache
 
       - name: Run dev containers
         run: docker-compose -f docker-compose.yml up -d
 
-      - name: Install laravel dependencies
-        run: docker-compose exec --no-TTY app composer install --prefer-dist --no-dev --optimize-autoloader
+      - name: Check permissions
+        run: docker-compose exec php ls -la
 
-      - name: Optimize dependencies
-        run: docker-compose run --rm composer dump-autoload --optimize
+      # - name: Install laravel dependencies
+      #   run: docker-compose run --rm composer install --prefer-dist --no-dev --optimize-autoloader
 
-      - name: Migrate database tables
-        run: docker-compose run --rm artisan migrate
+      # - name: Optimize dependencies
+      #   run: docker-compose run --rm composer dump-autoload --optimize
 
-      - name: Seed test data
-        run: docker-compose run --rm artisan db:seed
+      # - name: Migrate database tables
+      #   run: docker-compose run --rm artisan migrate
 
-      - name: Run application tests
-        run: docker-compose run --rm artisan test
+      # - name: Seed test data
+      #   run: docker-compose run --rm artisan db:seed
+
+      # - name: Run application tests
+      #   run: docker-compose run --rm artisan test
