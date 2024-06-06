@@ -30,6 +30,10 @@ ADD ./php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 #     && curl -L https://github.com/phpredis/phpredis/archive/5.3.4.tar.gz | tar xvz -C /usr/src/php/ext/redis --strip 1 \
 #     && echo 'redis' >> /usr/src/php-available-exts \
 #     && docker-php-ext-install redis
+
+COPY ./../src /var/www/html
+
+COPY --chown=laravel:laravel ./../src /var/www/html
     
 USER laravel
 
