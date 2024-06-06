@@ -29,8 +29,6 @@ RUN docker-php-ext-install pdo pdo_mysql
 #     && echo 'redis' >> /usr/src/php-available-exts \
 #     && docker-php-ext-install redis
 
-RUN chown -R laravel:laravel /var/www/html
-
 COPY ./src /var/www/html
 
 COPY --chown=laravel:laravel ./src /var/www/html

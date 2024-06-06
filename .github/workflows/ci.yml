@@ -48,7 +48,7 @@ jobs:
         run: docker-compose -f docker-compose.yml up -d
 
       - name: Install laravel dependencies
-        run: docker-compose run --rm composer install --prefer-dist --no-dev --optimize-autoloader
+        run: docker-compose exec app composer install --prefer-dist --no-dev --optimize-autoloader
 
       - name: Optimize dependencies
         run: docker-compose run --rm composer dump-autoload --optimize
