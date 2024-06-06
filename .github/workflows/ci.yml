@@ -48,7 +48,7 @@ jobs:
         run: docker-compose -f docker-compose.yml up -d
 
       - name: Check permissions
-        run: docker-compose exec php ls -la
+        run: docker-compose exec -no-TTY php ls -la
 
       # - name: Install laravel dependencies
       #   run: docker-compose run --rm composer install --prefer-dist --no-dev --optimize-autoloader
