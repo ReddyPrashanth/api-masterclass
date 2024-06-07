@@ -49,7 +49,7 @@ jobs:
           echo "APP_ENV=${APP_ENV}" >> src/.env
 
       - name: Build dev docker containers
-        run: docker-compose -f docker-compose.yml build
+        run: docker-compose -f docker-compose.yml build --no-cache
 
       - name: Run dev containers
         run: docker-compose -f docker-compose.yml up -d
