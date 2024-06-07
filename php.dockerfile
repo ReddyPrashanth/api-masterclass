@@ -1,10 +1,10 @@
 FROM php:8-fpm-alpine
 
-ARG UID
-ARG GID
+# ARG UID
+# ARG GID
 
-ENV UID=${UID}
-ENV GID=${GID}
+# ENV UID=${UID}
+# ENV GID=${GID}
 
 RUN mkdir -p /var/www/html
 
@@ -35,11 +35,10 @@ COPY ./src /var/www/html
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
     && chmod -R 775 /var/www/html/storage \
-    && chmod -R 775 /var/www/html/storage/logs \
     && chmod -R 775 /var/www/html/bootstrap/cache
 
 # Change the owner of the storage and cache directories to the www-data user
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/storage/logs /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 USER www-data
 

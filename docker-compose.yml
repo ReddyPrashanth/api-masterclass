@@ -49,7 +49,7 @@ services:
       - "3307:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 30s
+      interval: 10s
       timeout: 10s
       retries: 3
     environment:
