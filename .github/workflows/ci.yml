@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         uses: "php-actions/composer@v6"
         with:
-          args: "--prefer-dist --no-dev --optimize-autoloader"
+          args: "--prefer-dist --optimize-autoloader"
           working_dir: "src"
 
       - name: Create .env file
@@ -51,7 +51,7 @@ jobs:
           echo "GID=${UID}" >> .env
 
       - name: Build dev docker containers
-        run: docker-compose -f docker-compose.yml build --no-cache
+        run: docker-compose -f docker-compose.yml build
 
       - name: Run dev containers
         run: docker-compose -f docker-compose.yml up -d
