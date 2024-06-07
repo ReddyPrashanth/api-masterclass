@@ -75,6 +75,7 @@ services:
         condition: service_healthy
     environment:
       <<: [*appEnvironment]
+    user: "${UID}:${GID}"
 
   composer:
     build:
@@ -88,6 +89,7 @@ services:
     depends_on:
       - php
     entrypoint: ["composer", "--ignore-platform-reqs"]
+    user: "${UID}:${GID}"
     networks:
       - laravel
 
@@ -105,5 +107,6 @@ services:
     entrypoint: ["php", "/var/www/html/artisan"]
     environment:
       <<: [*appEnvironment]
+    user: "${UID}:${GID}"
     networks:
       - laravel

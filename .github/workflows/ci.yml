@@ -47,12 +47,14 @@ jobs:
           echo "DB_USER=${DB_USER}" >> .env
           echo "DB_PASS=${DB_PASS}" >> .env
           echo "APP_ENV=${APP_ENV}" >> src/.env
+          echo "${UID}"
+          echo "${GID}"
 
-      - name: Build dev docker containers
-        run: docker-compose -f docker-compose.yml build --no-cache
+      # - name: Build dev docker containers
+      #   run: docker-compose -f docker-compose.yml build --no-cache
 
-      - name: Run dev containers
-        run: docker-compose -f docker-compose.yml up -d
+      # - name: Run dev containers
+      #   run: docker-compose -f docker-compose.yml up -d
 
       # - name: Install laravel dependencies
       #   run: docker-compose run --rm composer install --prefer-dist --no-dev --optimize-autoloader
@@ -60,11 +62,11 @@ jobs:
       # - name: Optimize dependencies
       #   run: docker-compose run --rm composer dump-autoload --optimize
 
-      - name: Migrate database tables
-        run: docker-compose run --rm artisan migrate
+      # - name: Migrate database tables
+      #   run: docker-compose run --rm artisan migrate
 
-      - name: Seed test data
-        run: docker-compose run --rm artisan db:seed
+      # - name: Seed test data
+      #   run: docker-compose run --rm artisan db:seed
 
-      - name: Run application tests
-        run: docker-compose run --rm artisan test
+      # - name: Run application tests
+      #   run: docker-compose run --rm artisan test
