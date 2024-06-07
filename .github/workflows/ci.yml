@@ -48,7 +48,7 @@ jobs:
           echo "DB_PASS=${DB_PASS}" >> .env
           echo "APP_ENV=${APP_ENV}" >> src/.env
           echo "UID=${UID}" >> .env
-          echo "GID=${UID}" >> .env"
+          echo "GID=${UID}" >> .env
 
       - name: Build dev docker containers
         run: docker-compose -f docker-compose.yml build --no-cache
