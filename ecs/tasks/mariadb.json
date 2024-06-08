@@ -1,0 +1,41 @@
+{
+  "family": "mariadb-task",
+  "networkMode": "awsvpc",
+  "containerDefinitions": [
+    {
+      "name": "mariadb",
+      "image": "mariadb:latest",
+      "essential": true,
+      "memory": 512,
+      "cpu": 256,
+      "portMappings": [
+        {
+          "containerPort": 3306,
+          "hostPort": 3306,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "MYSQL_ROOT_PASSWORD",
+          "value": "secret"
+        },
+        {
+          "name": "MYSQL_DATABASE",
+          "value": "homestead"
+        },
+        {
+          "name": "MYSQL_USER",
+          "value": "homestead"
+        },
+        {
+          "name": "MYSQL_PASSWORD",
+          "value": "secret"
+        }
+      ]
+    }
+  ],
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512"
+}

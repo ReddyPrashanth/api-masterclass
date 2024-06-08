@@ -28,11 +28,11 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Install dependencies
-        uses: "php-actions/composer@v6"
-        with:
-          args: "--prefer-dist --optimize-autoloader"
-          working_dir: "src"
+      # - name: Install dependencies
+      #   uses: "php-actions/composer@v6"
+      #   with:
+      #     args: "--prefer-dist --optimize-autoloader"
+      #     working_dir: "src"
 
       - name: Create .env file
         run: |
@@ -55,9 +55,6 @@ jobs:
 
       - name: Run dev containers
         run: docker-compose -f docker-compose.yml up -d
-
-      # - name: Install laravel dependencies
-      #   run: docker-compose run --rm composer install --prefer-dist --no-dev --optimize-autoloader
 
       # - name: Optimize dependencies
       #   run: docker-compose run --rm composer dump-autoload --optimize

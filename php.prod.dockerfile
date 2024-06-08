@@ -1,50 +1,52 @@
-FROM php:8-fpm-alpine
+# Stage 1: Build the Laravel application
+FROM composer:latest as builder
 
-ARG UID
-ARG GID
+WORKDIR /app
 
-ENV UID=${UID}
-ENV GID=${GID}
+# Copy the composer files
+COPY src/composer.json src/composer.lock ./
 
-RUN mkdir -p /var/www/html
+# Install dependencies
+RUN composer install --no-dev --no-scripts --no-autoloader
 
-WORKDIR /var/www/html
+# Copy the rest of the application code
+COPY ./src .
 
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+# Generate optimized autoload files
+RUN composer dump-autoload --optimize
 
-# MacOS staff group's gid is 20, so is the dialout group in alpine linux. We're not using it, let's just remove it.
-RUN delgroup dialout
+# Stage 2: Set up the Nginx server
+FROM php:8-apache
 
-# RUN addgroup -g ${GID} --system laravel
-# RUN adduser -G laravel --system -D -s /bin/sh -u ${UID} laravel
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd \
+    && docker-php-ext-install pdo pdo_mysql zip
 
-# RUN sed -i "s/user = www-data/user = laravel/g" /usr/local/etc/php-fpm.d/www.conf
-# RUN sed -i "s/group = www-data/group = laravel/g" /usr/local/etc/php-fpm.d/www.conf
-# RUN echo "php_admin_flag[log_errors] = on" >> /usr/local/etc/php-fpm.d/www.conf
+# Enable Apache modules
+RUN a2enmod rewrite
 
-RUN docker-php-ext-install pdo pdo_mysql opcache
+# Copy the built application from the builder stage
+COPY --from=builder /app /var/www/html
 
-ADD ./conf/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
-
-# RUN mkdir -p /usr/src/php/ext/redis \
-#     && curl -L https://github.com/phpredis/phpredis/archive/5.3.4.tar.gz | tar xvz -C /usr/src/php/ext/redis --strip 1 \
-#     && echo 'redis' >> /usr/src/php-available-exts \
-#     && docker-php-ext-install redis
-
-COPY ./src /var/www/html
-
-# Set permissions for Laravel directories
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html \
-    && chmod -R 775 /var/www/html/storage \
-    && chmod -R 775 /var/www/html/bootstrap/cache
-
-# Change the owner of the storage and cache directories to the www-data user
+# Set permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-    
-USER www-data
+# Copy custom Apache virtual host configuration
+COPY conf/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 
-EXPOSE 9000
+# Set the working directory
+WORKDIR /var/www/html
 
-CMD ["php-fpm", "-y", "/usr/local/etc/php-fpm.conf", "-R"]
+# Expose port 80
+EXPOSE 80
+
+# Start Apache in the foreground
+CMD ["apache2-foreground"]

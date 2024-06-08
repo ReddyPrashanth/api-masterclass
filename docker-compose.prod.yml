@@ -12,21 +12,44 @@ x-app-environment: &appEnvironment
   DB_USERNAME: ${DB_USER}
   DB_PASSWORD: ${DB_PASS}
 
+x-database-environment: &databaseEnvironment
+  MYSQL_DATABASE: ${DB_DATABASE}
+  MYSQL_USER: ${DB_USER}
+  MYSQL_PASSWORD: ${DB_PASS}
+  MYSQL_ROOT_PASSWORD: ${DB_PASS}
+  SERVICE_TAGS: dev
+  SERVICE_NAME: mysql
+
 networks:
   laravel:
 
 services:
+  mysql:
+    image: mariadb:10.6
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    environment:
+      <<: [*databaseEnvironment]
+    networks:
+      - laravel
   app:
     build:
       context: .
-      dockerfile: nginx.prod.dockerfile
+      dockerfile: php.prod.dockerfile
     ports:
       - "80:80"
-      - "443:443"
-  php:
-    build:
-      context: .
-      dockerfile: php.prod.dockerfile
+    # user: "${UID}:${GID}"
+    depends_on:
+      mysql:
+        condition: service_healthy
     environment:
       <<: [*appEnvironment]
-    user: "${UID}:${GID}"
+    networks:
+      - laravel
