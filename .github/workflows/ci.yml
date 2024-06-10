@@ -66,7 +66,8 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Build dev docker containers
-        run: docker-compose -f docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
+        run: |
+          DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f docker-compose.yml build --progress=plain --build-arg BUILDKIT_INLINE_CACHE=1
         env:
           DOCKER_BUILDKIT: 1
 
@@ -92,15 +93,9 @@ jobs:
         run: |
           rm src/.env
           echo "APP_ENV=prod" >> src/.env
-          cat src/.env
 
       - name: Build production docker image
-        run: docker-compose -f docker-compose.prod.yml build --build-arg BUILDKIT_INLINE_CACHE=1 app
+        run: |
+          DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f docker-compose.prod.yml build --progress=plain --build-arg BUILDKIT_INLINE_CACHE=1 app
         env:
           DOCKER_BUILDKIT: 1
-
-      - name: Update cache with new layers
-        if: steps.cache-docker-layers.outputs.cache-hit != 'true'
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
