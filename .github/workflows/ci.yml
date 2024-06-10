@@ -50,8 +50,22 @@ jobs:
           echo "UID=${UID}" >> .env
           echo "GID=${UID}" >> .env
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Cache Docker layers
+        id: cache-docker-layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
       - name: Build dev docker containers
-        run: docker-compose -f docker-compose.yml build
+        run: docker-compose -f docker-compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
+        env:
+          DOCKER_BUILDKIT: 1
 
       - name: Start dev containers
         run: docker-compose -f docker-compose.yml up -d
@@ -74,11 +88,13 @@ jobs:
       - name: Update .env file for production
         run: |
           rm src/.env
-          echo "APP_ENV=${APP_ENV}" >> src/.env
+          echo "APP_ENV=prod" >> src/.env
           cat src/.env
 
       - name: Build production docker image
-        run: docker-compose -f docker-compose.prod.yml build app
+        run: docker-compose -f docker-compose.prod.yml build app --build-arg BUILDKIT_INLINE_CACHE=1
+        env:
+          DOCKER_BUILDKIT: 1
 
       - name: List docker image
-        run: docker image ls | grep tickets
+        run: docker image ls
