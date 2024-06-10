@@ -28,6 +28,14 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
       - name: Install dependencies
         uses: "php-actions/composer@v6"
         with:
@@ -66,16 +74,9 @@ jobs:
             ${{ runner.os }}-docker-
 
       - name: Build dev docker containers
-        run: |
-          DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f docker-compose.yml build --progress=plain --build-arg BUILDKIT_INLINE_CACHE=1
+        run: docker-compose -f docker-compose.yml build --progress=plain --build-arg BUILDKIT_INLINE_CACHE=1
         env:
           DOCKER_BUILDKIT: 1
-
-      # - name: Update cache with new layers
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: /tmp/.buildx-cache
-      #     key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
 
       - name: Start dev containers
         run: docker-compose -f docker-compose.yml up -d
