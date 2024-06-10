@@ -92,7 +92,7 @@ jobs:
           cat src/.env
 
       - name: Build production docker image
-        run: docker-compose -f docker-compose.prod.yml build app --build-arg BUILDKIT_INLINE_CACHE=1
+        run: docker-compose -f docker-compose.prod.yml build --build-arg BUILDKIT_INLINE_CACHE=1 app
         env:
           DOCKER_BUILDKIT: 1
 
