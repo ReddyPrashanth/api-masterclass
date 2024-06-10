@@ -71,11 +71,11 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
 
-      - name: Update cache with new layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
+      # - name: Update cache with new layers
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: /tmp/.buildx-cache
+      #     key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
 
       - name: Start dev containers
         run: docker-compose -f docker-compose.yml up -d
