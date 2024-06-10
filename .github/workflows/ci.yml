@@ -99,5 +99,8 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
 
-      - name: List docker image
-        run: docker image ls
+      - name: Update cache with new layers
+        if: steps.cache-docker-layers.outputs.cache-hit != 'true'
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
