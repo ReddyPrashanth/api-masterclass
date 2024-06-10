@@ -71,11 +71,6 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
 
-      - name: Save Docker layers cache
-        if: steps.cache-docker-layers.outputs.cache-hit != 'true'
-        run: |
-          tar -czf /tmp/.buildx-cache/cache.tar.gz -C /var/lib/docker/buildkit .
-
       - name: Update cache with new layers
         uses: actions/cache@v3
         with:
