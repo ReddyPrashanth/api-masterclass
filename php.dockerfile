@@ -28,9 +28,6 @@ COPY ./src .
 # Install Composer
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-# Install Laravel dependencies
-RUN composer install
-
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 

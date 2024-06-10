@@ -1,0 +1,58 @@
+{
+  "family": "laravel",
+  "networkMode": "awsvpc",
+  "containerDefinitions": [
+    {
+      "name": "app",
+      "image": "424848754882.dkr.ecr.us-east-2.amazonaws.com/tickets-please:latest",
+      "memory": 512,
+      "cpu": 256,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80
+        }
+      ],
+      "environment": [
+        {
+          "name": "APP_ENV",
+          "value": "prod"
+        },
+        {
+          "name": "APP_KEY",
+          "value": "base64:vmJvslu8KTLeYnFjXgRgLp4IIziOgV5oSEqjMwcIqOs="
+        },
+        {
+          "name": "DB_CONNECTION",
+          "value": "mysql"
+        },
+        {
+          "name": "DB_HOST",
+          "value": "mysql"
+        },
+        {
+          "name": "DB_PORT",
+          "value": "3306"
+        },
+        {
+          "name": "DB_DATABASE",
+          "value": "homestead"
+        },
+        {
+          "name": "DB_USERNAME",
+          "value": "homestead"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "value": "secret"
+        }
+      ]
+    }
+  ],
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::424848754882:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::424848754882:role/ecsTaskRole"
+}

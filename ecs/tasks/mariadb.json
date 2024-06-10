@@ -1,9 +1,9 @@
 {
-  "family": "mariadb-task",
+  "family": "mysql",
   "networkMode": "awsvpc",
   "containerDefinitions": [
     {
-      "name": "mariadb",
+      "name": "mysql",
       "image": "mariadb:latest",
       "essential": true,
       "memory": 512,
@@ -37,5 +37,7 @@
   ],
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "256",
-  "memory": "512"
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::424848754882:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::424848754882:role/ecsTaskRole"
 }

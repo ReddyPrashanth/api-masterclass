@@ -53,7 +53,7 @@ jobs:
       - name: Build dev docker containers
         run: docker-compose -f docker-compose.yml build
 
-      - name: Run dev containers
+      - name: Start dev containers
         run: docker-compose -f docker-compose.yml up -d
 
       # - name: Optimize dependencies
@@ -67,3 +67,18 @@ jobs:
 
       - name: Run application tests
         run: docker-compose run --rm artisan test
+
+      - name: Stop dev containers
+        run: docker-compose -f docker-compose.yml down
+
+      - name: Update .env file for production
+        run: |
+          rm src/.env
+          echo "APP_ENV=${APP_ENV}" >> src/.env
+          cat src/.env
+
+      - name: Build production docker image
+        run: docker-compose -f docker-compose.prod.yml build app
+
+      - name: List docker image
+        run: docker image ls | grep tickets

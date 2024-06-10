@@ -2,9 +2,9 @@
 
 # Variables
 REGION="us-east-2"
-ACCOUNT_ID="424848754882"
+ACCOUNT_ID="${AWS_ACCOUNT_ID}"
 REPOSITORY_NAME="tickets-please"
-IMAGE_NAME="tickets-please-php:latest"
+IMAGE_NAME="tickets-please-app:latest"
 ECR_URI="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${REPOSITORY_NAME}"
 
 # Authenticate Docker to ECR

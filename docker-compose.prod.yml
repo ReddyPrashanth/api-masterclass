@@ -43,6 +43,7 @@ services:
     build:
       context: .
       dockerfile: php.prod.dockerfile
+    container_name: tickets-please
     ports:
       - "80:80"
     # user: "${UID}:${GID}"
