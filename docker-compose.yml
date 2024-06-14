@@ -11,6 +11,11 @@ x-app-environment: &appEnvironment
   DB_DATABASE: ${DB_DATABASE}
   DB_USERNAME: ${DB_USER}
   DB_PASSWORD: ${DB_PASS}
+  MAIL_MAILER: ${MAIL_MAILER}
+  MAIL_HOST: ${MAIL_HOST}
+  MAIL_PORT: ${MAIL_PORT}
+  MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
+  MAIL_FROM_NAME: ${MAIL_FROM_NAME}
 
 x-database-environment: &databaseEnvironment
   MYSQL_DATABASE: ${DB_DATABASE}
@@ -79,5 +84,13 @@ services:
     entrypoint: ["php", "/var/www/html/artisan"]
     environment:
       <<: [*appEnvironment]
+    networks:
+      - laravel
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"
     networks:
       - laravel

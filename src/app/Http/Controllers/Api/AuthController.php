@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LoginUserRequest;
+use App\Http\Requests\Api\SignUpUserRequest;
+use App\Mail\AccountVerification;
 use App\Models\User;
 use App\Permissions\V1\Abilities;
 use App\Traits\ApiResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -40,7 +42,6 @@ class AuthController extends Controller
         }
 
         $user = User::firstWhere('email', $request->email);
-        Log::info(Abilities::getAbilities($user));
         return $this->ok(
             'Authenticated',
             [
@@ -66,5 +67,42 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return $this->ok('');
+    }
+
+    /**
+     * Signup
+     * 
+     * Registers a user and sends account verification notification
+     * 
+     * @group Authentication
+     * @response 200 {}
+     */
+    public function signup(SignUpUserRequest $request)
+    {
+        $user = User::create($request->only('name', 'email', 'password'));
+        Mail::to($user)->queue((new AccountVerification($user->verificationUrl()))->onQueue('account'));
+        return $this->ok(
+            'Activation required. Please verify your account',
+        );
+    }
+
+    /**
+     * Account verification
+     * 
+     * Verifies user account
+     * 
+     * @group Authentication
+     * @response 200 {}
+     */
+    public function verify($id, $hash)
+    {
+        $user = User::findOrFail($id);
+        if ($user->checkHash($hash)) {
+            $user->verified();
+            return $this->ok(
+                'Account verification complete. Please try logging in.',
+            );
+        }
+        return $this->error('Verification link expired. Please try again.', 410);
     }
 }

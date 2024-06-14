@@ -26,7 +26,7 @@ class UpdateTicketRequest extends BaseTicketRequest
             'data.attributes.title' => 'sometimes|string',
             'data.attributes.description' => 'sometimes|string',
             'data.attributes.status' => 'sometimes|string|in:A,C,H,X',
-            'data.relationships.author.data.id' => 'prohbited',
+            'data.relationships.author.data.id' => 'prohibited',
         ];
 
         if (Auth::user()->tokenCan(Abilities::UpdateTicket)) {
